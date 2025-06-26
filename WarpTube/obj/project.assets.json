@@ -2759,6 +2759,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -5521,6 +5522,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -8283,6 +8285,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -11045,6 +11048,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -13807,6 +13811,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -14657,6 +14662,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -15501,6 +15507,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -16345,6 +16352,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -17189,6 +17197,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -18033,6 +18042,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -18883,6 +18893,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -19727,6 +19738,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -20571,6 +20583,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -21415,6 +21428,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {
@@ -22259,6 +22273,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Google.Apis.YouTube.v3": "1.69.0.3764",
           "Microsoft.AspNetCore.Components.Web": "9.0.0"
         },
         "compile": {

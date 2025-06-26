@@ -1,0 +1,37 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/jeff/Developer/Projects/WarpTube/WarpTube/obj/Debug/net9.0-android/scopedcss/bundle/WarpTube.styles.css",
+      "PackagePath": "staticwebassets/WarpTube.styles.css"
+    },
+    {
+      "Id": "/Users/jeff/Developer/Projects/WarpTube/WarpTube/wwwroot/app.css",
+      "PackagePath": "staticwebassets/app.css"
+    },
+    {
+      "Id": "/Users/jeff/Developer/Projects/WarpTube/WarpTube/wwwroot/index.html",
+      "PackagePath": "staticwebassets/index.html"
+    },
+    {
+      "Id": "obj/Debug/net9.0-android/staticwebassets/msbuild.WarpTube.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0-android/staticwebassets/msbuild.WarpTube.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0-android/staticwebassets/msbuild.build.WarpTube.props",
+      "PackagePath": "build\\WarpTube.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0-android/staticwebassets/msbuild.buildMultiTargeting.WarpTube.props",
+      "PackagePath": "buildMultiTargeting\\WarpTube.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0-android/staticwebassets/msbuild.buildTransitive.WarpTube.props",
+      "PackagePath": "buildTransitive\\WarpTube.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

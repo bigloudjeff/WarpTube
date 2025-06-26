@@ -1,0 +1,1 @@
+-v --force --timestamp=none --sign - --entitlements /Users/jeff/Developer/Projects/WarpTube/WarpTube/obj/Debug/net9.0-maccatalyst/maccatalyst-arm64/Entitlements.xcent /Users/jeff/Developer/Projects/WarpTube/WarpTube/bin/Debug/net9.0-maccatalyst/maccatalyst-arm64/WarpTube.app

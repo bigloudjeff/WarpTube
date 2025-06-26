@@ -45,6 +45,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Google.Apis.YouTube.v3": {
+              "target": "Package",
+              "version": "[1.69.0.3764, )"
+            },
             "Microsoft.AspNetCore.Components.Web": {
               "target": "Package",
               "version": "[9.0.0, )"

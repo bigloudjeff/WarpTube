@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Hzmtf85hi+0=",
+  "dgSpecHash": "V6P/ieWGhBw=",
   "success": true,
   "projectFilePath": "/Users/jeff/Developer/Projects/WarpTube/WarpTube/WarpTube.csproj",
   "expectedPackageFiles": [
@@ -137,9 +137,9 @@
     "/Users/jeff/.nuget/packages/xamarin.kotlinx.coroutines.core.jvm/1.9.0.2/xamarin.kotlinx.coroutines.core.jvm.1.9.0.2.nupkg.sha512",
     "/Users/jeff/.nuget/packages/xamarin.kotlinx.serialization.core/1.7.3.2/xamarin.kotlinx.serialization.core.1.7.3.2.nupkg.sha512",
     "/Users/jeff/.nuget/packages/xamarin.kotlinx.serialization.core.jvm/1.7.3.2/xamarin.kotlinx.serialization.core.jvm.1.7.3.2.nupkg.sha512",
-    "/Users/jeff/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.5/microsoft.aspnetcore.app.ref.9.0.5.nupkg.sha512",
     "/Users/jeff/.nuget/packages/microsoft.netcore.app.runtime.mono.android-arm64/9.0.6/microsoft.netcore.app.runtime.mono.android-arm64.9.0.6.nupkg.sha512",
     "/Users/jeff/.nuget/packages/microsoft.netcore.app.runtime.mono.android-x64/9.0.6/microsoft.netcore.app.runtime.mono.android-x64.9.0.6.nupkg.sha512",
+    "/Users/jeff/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.5/microsoft.aspnetcore.app.ref.9.0.5.nupkg.sha512",
     "/Users/jeff/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.5/microsoft.aspnetcore.app.ref.9.0.5.nupkg.sha512",
     "/Users/jeff/.nuget/packages/microsoft.ios.ref.net9.0_18.0/18.0.9617/microsoft.ios.ref.net9.0_18.0.18.0.9617.nupkg.sha512",
     "/Users/jeff/.nuget/packages/microsoft.ios.runtime.iossimulator-arm64.net9.0_18.0/18.0.9617/microsoft.ios.runtime.iossimulator-arm64.net9.0_18.0.18.0.9617.nupkg.sha512",
