@@ -45,6 +45,11 @@ Manifest.lock
 *.nupkg
 packages/
 
+# AOT (Ahead of Time) compiled files
+**/nativelibraries/
+**/aot-output/
+*.dll.s
+
 # User-specific files
 *.rsuser
 *.suo
