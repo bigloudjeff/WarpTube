@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using WarpTube.Web.Components;
 using WarpTube.Shared.Services;
 using WarpTube.Web.Services;
+using WarpTube.Shared.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Configure Entity Framework and SQLite
+builder.Services.AddDbContextFactory<WarpTubeDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=warptube.db",
+        b => b.MigrationsAssembly("WarpTube.Web"))
+);
+
 // Add device-specific services used by the WarpTube.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
+
+// Register YouTube download service
+builder.Services.AddScoped<IYouTubeDownloadService, YouTubeDownloadService>();
 
 var app = builder.Build();
 

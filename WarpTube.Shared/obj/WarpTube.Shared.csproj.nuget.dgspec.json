@@ -52,6 +52,10 @@
             "Microsoft.AspNetCore.Components.Web": {
               "target": "Package",
               "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
             }
           },
           "imports": [

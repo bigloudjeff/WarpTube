@@ -1,4 +1,11 @@
 @page "/"
+@using WarpTube.Shared.Services
+@using WarpTube.Shared.Models
+@using WarpTube.Shared.Data
+@using Microsoft.EntityFrameworkCore
+@inject IYouTubeDownloadService YouTubeService
+@inject IDbContextFactory<WarpTubeDbContext> DbContextFactory
+@inject IJSRuntime JSRuntime
 
 <PageTitle>WarpTube</PageTitle>
 
@@ -6,27 +13,247 @@
     <div class="row">
         <div class="col-12">
             <h1 class="display-4 mb-4 text-center">WarpTube</h1>
-            <p class="lead text-center mb-4">Discover and watch YouTube videos</p>
+            <p class="lead text-center mb-4">Fetch and manage YouTube video metadata</p>
         </div>
     </div>
 
     <div class="row justify-content-center mb-4">
         <div class="col-md-8 col-lg-6">
             <div class="input-group input-group-lg">
-                <span class="input-group-text">&#64;</span>
-                <input type="text" class="form-control" placeholder="Enter channel handle" />
-                <button class="btn btn-primary" type="button">
-                    Search
+                <span class="input-group-text"><i class="bi bi-youtube"></i></span>
+                <input type="text" class="form-control" @bind="youtubeUrl" 
+                       placeholder="Enter YouTube URL (e.g., https://youtube.com/watch?v=...)" 
+                       @onkeypress="HandleKeyPress" />
+                <button class="btn btn-primary" type="button" @onclick="ProcessVideoUrl" disabled="@isProcessing">
+                    @if (isProcessing)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="ms-2">Processing...</span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-plus-circle"></i> <span class="ms-2">Add Video</span>
+                    }
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="text-center text-muted">
-                <p class="mt-3">Enter a YouTube channel handle above to get started</p>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> @errorMessage
+                </div>
             </div>
         </div>
-    </div>
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="alert alert-success" role="alert">
+                    <i class="bi bi-check-circle"></i> @successMessage
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (videos != null && videos.Any())
+    {
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mb-4">Video Library</h3>
+            </div>
+        </div>
+        
+        <div class="row">
+            @foreach (var video in videos)
+            {
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="position-relative">
+                            @if (!string.IsNullOrEmpty(video.ThumbnailUrl))
+                            {
+                                <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title" style="height: 200px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="bi bi-play-circle text-white" style="font-size: 3rem;"></i>
+                                </div>
+                            }
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-@GetStatusBadgeColor(video.Status)">@video.Status</span>
+                            </div>
+                            @if (video.Duration.HasValue)
+                            {
+                                <div class="position-absolute bottom-0 end-0 bg-dark bg-opacity-75 text-white px-2 py-1 m-2 rounded">
+                                    <small>@FormatDuration(video.Duration.Value)</small>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title" title="@video.Title">@TruncateText(video.Title, 60)</h6>
+                            <p class="card-text text-muted small">@video.Channel</p>
+                            <p class="card-text text-muted small flex-grow-1">@TruncateText(video.Description, 100)</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted">@video.PublishedAt?.ToString("MMM dd, yyyy")</small>
+                                    @if (video.ViewCount.HasValue)
+                                    {
+                                        <small class="text-muted">@FormatViewCount(video.ViewCount.Value) views</small>
+                                    }
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-outline-primary btn-sm" @onclick="() => OpenVideo(video.OriginalUrl)">
+                                        <i class="bi bi-play-fill"></i> Watch on YouTube
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else if (string.IsNullOrEmpty(youtubeUrl) && !isProcessing)
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="text-center text-muted">
+                    <i class="bi bi-youtube" style="font-size: 4rem;"></i>
+                    <p class="mt-3">Enter a YouTube URL above to fetch video metadata</p>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+
+@code {
+    private string youtubeUrl = "";
+    private List<Video> videos = new();
+    private bool isProcessing = false;
+    private string errorMessage = "";
+    private string successMessage = "";
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadVideos();
+        
+        // Auto-refresh videos every 30 seconds
+        var timer = new System.Threading.Timer(async _ => 
+        {
+            await InvokeAsync(async () => 
+            {
+                await LoadVideos();
+                StateHasChanged();
+            });
+        }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+    }
+
+    private async Task LoadVideos()
+    {
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        videos = await dbContext.Videos
+            .OrderByDescending(v => v.CreatedAt)
+            .Take(20)
+            .ToListAsync();
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await ProcessVideoUrl();
+        }
+    }
+
+    private async Task ProcessVideoUrl()
+    {
+        if (string.IsNullOrWhiteSpace(youtubeUrl))
+        {
+            errorMessage = "Please enter a YouTube URL.";
+            return;
+        }
+
+        isProcessing = true;
+        errorMessage = "";
+        successMessage = "";
+
+        try
+        {
+            if (!await YouTubeService.IsValidYouTubeUrlAsync(youtubeUrl))
+            {
+                errorMessage = "Please enter a valid YouTube URL.";
+                return;
+            }
+
+            var video = await YouTubeService.GetVideoInfoAsync(youtubeUrl);
+            if (video != null)
+            {
+                successMessage = $"Video '{video.Title}' has been added to your library.";
+                await LoadVideos();
+                youtubeUrl = "";
+            }
+            else
+            {
+                errorMessage = "Unable to fetch video information. Please check the URL and try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error processing video: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+
+    private async Task OpenVideo(string url)
+    {
+        await JSRuntime.InvokeAsync<object>("open", url, "_blank");
+    }
+
+
+    private string GetStatusBadgeColor(VideoStatus status) => status switch
+    {
+        VideoStatus.Active => "success",
+        VideoStatus.Failed => "danger",
+        VideoStatus.Archived => "secondary",
+        _ => "secondary"
+    };
+
+    private string TruncateText(string text, int maxLength)
+    {
+        if (string.IsNullOrEmpty(text))
+            return "";
+
+        return text.Length <= maxLength 
+            ? text 
+            : text.Substring(0, maxLength) + "...";
+    }
+
+    private string FormatDuration(TimeSpan duration)
+    {
+        if (duration.Hours > 0)
+            return $"{duration.Hours}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+        else
+            return $"{duration.Minutes}:{duration.Seconds:D2}";
+    }
+
+    private string FormatViewCount(long viewCount)
+    {
+        if (viewCount >= 1000000)
+            return $"{viewCount / 1000000.0:F1}M";
+        if (viewCount >= 1000)
+            return $"{viewCount / 1000.0:F1}K";
+        return viewCount.ToString("N0");
+    }
+}
