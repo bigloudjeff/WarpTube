@@ -76,4 +76,12 @@
     <ProjectReference Include="..\WarpTube.Shared\WarpTube.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Include yt-dlp binary -->
+    <Content Include="..\tools\yt-dlp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>tools\yt-dlp</Link>
+    </Content>
+  </ItemGroup>
+
 </Project>

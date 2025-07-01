@@ -32,19 +32,24 @@ public class WarpTubeDbContext : DbContext
                   .IsRequired();
 
             entity.Property(e => e.Description)
-                  .HasMaxLength(5000);
+                  .HasMaxLength(5000)
+                  .IsRequired(false);
 
             entity.Property(e => e.Channel)
-                  .HasMaxLength(200);
+                  .HasMaxLength(200)
+                  .IsRequired(false);
 
             entity.Property(e => e.ChannelId)
-                  .HasMaxLength(50);
+                  .HasMaxLength(50)
+                  .IsRequired(false);
 
             entity.Property(e => e.ThumbnailUrl)
-                  .HasMaxLength(500);
+                  .HasMaxLength(500)
+                  .IsRequired(false);
 
             entity.Property(e => e.OriginalUrl)
-                  .HasMaxLength(500);
+                  .HasMaxLength(500)
+                  .IsRequired();
 
 
             entity.Property(e => e.ErrorMessage)

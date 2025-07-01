@@ -13,11 +13,11 @@ public class Video
     [Required]
     public string Title { get; set; } = string.Empty;
     
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; }
     
-    public string Channel { get; set; } = string.Empty;
+    public string? Channel { get; set; }
     
-    public string ChannelId { get; set; } = string.Empty;
+    public string? ChannelId { get; set; }
     
     public DateTime? PublishedAt { get; set; }
     
@@ -27,7 +27,7 @@ public class Video
     
     public long? LikeCount { get; set; }
     
-    public string ThumbnailUrl { get; set; } = string.Empty;
+    public string? ThumbnailUrl { get; set; }
     
     public string OriginalUrl { get; set; } = string.Empty;
     

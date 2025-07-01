@@ -21,10 +21,10 @@
         <div class="col-md-8 col-lg-6">
             <div class="input-group input-group-lg">
                 <span class="input-group-text"><i class="bi bi-youtube"></i></span>
-                <input type="text" class="form-control" @bind="youtubeUrl" 
+                <input type="text" class="form-control" @bind="youtubeUrl" @oninput="OnUrlChanged"
                        placeholder="Enter YouTube URL (e.g., https://youtube.com/watch?v=...)" 
                        @onkeypress="HandleKeyPress" />
-                <button class="btn btn-primary" type="button" @onclick="ProcessVideoUrl" disabled="@isProcessing">
+                <button class="btn btn-primary" type="button" @onclick="ProcessVideoUrl" disabled="@(isProcessing || !IsValidYouTubeUrl(youtubeUrl))">
                     @if (isProcessing)
                     {
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -32,7 +32,7 @@
                     }
                     else
                     {
-                        <i class="bi bi-plus-circle"></i> <span class="ms-2">Add Video</span>
+                        <i class="bi bi-download"></i> <span class="ms-2">Download</span>
                     }
                 </button>
             </div>
@@ -143,6 +143,17 @@
 
     protected override async Task OnInitializedAsync()
     {
+        try
+        {
+            // Ensure database is created
+            await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+            await dbContext.Database.EnsureCreatedAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database initialization error: {ex}");
+        }
+        
         await LoadVideos();
         
         // Auto-refresh videos every 30 seconds
@@ -167,10 +178,25 @@
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
     {
-        if (e.Key == "Enter")
+        if (e.Key == "Enter" && IsValidYouTubeUrl(youtubeUrl))
         {
             await ProcessVideoUrl();
         }
+    }
+
+    private void OnUrlChanged(ChangeEventArgs e)
+    {
+        youtubeUrl = e.Value?.ToString() ?? "";
+        StateHasChanged();
+    }
+
+    private bool IsValidYouTubeUrl(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+            return false;
+            
+        return Uri.TryCreate(url, UriKind.Absolute, out var uriResult) &&
+               (uriResult.Host.Contains("youtube.com") || uriResult.Host.Contains("youtu.be"));
     }
 
     private async Task ProcessVideoUrl()
@@ -184,6 +210,7 @@
         isProcessing = true;
         errorMessage = "";
         successMessage = "";
+        StateHasChanged(); // Force UI update to show spinner
 
         try
         {
@@ -207,11 +234,16 @@
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error processing video: {ex.Message}";
+            var detailedError = ex.InnerException?.Message ?? ex.Message;
+            errorMessage = $"Error processing video: {detailedError}";
+            
+            // Log detailed error for debugging
+            Console.WriteLine($"YouTube processing error: {ex}");
         }
         finally
         {
             isProcessing = false;
+            StateHasChanged(); // Force UI update to hide spinner and show results
         }
     }
 

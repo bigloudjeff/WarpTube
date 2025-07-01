@@ -1,4 +1,4 @@
-﻿namespace WarpTube;
+namespace WarpTube;
 
 public partial class App : Application
 {
@@ -9,6 +9,6 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new MainPage()) { Title = "WarpTube" };
+        return new Window(Handler.MauiContext!.Services.GetRequiredService<MainPage>()) { Title = "WarpTube" };
     }
 }
