@@ -64,16 +64,26 @@
     @if (videos != null && videos.Any())
     {
         <div class="row">
-            <div class="col-12">
-                <h3 class="mb-4">Video Library</h3>
+            <div class="col-12 d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0">Video Library</h3>
+                <div class="btn-group" role="group" aria-label="View toggle">
+                    <button type="button" class="btn @(isGridView ? "btn-primary" : "btn-outline-primary") btn-sm" @onclick="() => SetViewMode(true)">
+                        <i class="bi bi-grid-3x3-gap"></i> Grid
+                    </button>
+                    <button type="button" class="btn @(!isGridView ? "btn-primary" : "btn-outline-primary") btn-sm" @onclick="() => SetViewMode(false)">
+                        <i class="bi bi-list"></i> List
+                    </button>
+                </div>
             </div>
         </div>
         
-        <div class="row">
-            @foreach (var video in videos)
-            {
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
-                    <div class="card h-100 shadow-sm">
+        @if (isGridView)
+        {
+            <div class="row">
+                @foreach (var video in videos)
+                {
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+                        <div class="card h-100 shadow-sm">
                         <div class="position-relative">
                             @if (!string.IsNullOrEmpty(video.ThumbnailUrl))
                             {
@@ -114,10 +124,62 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="list-group">
+                @foreach (var video in videos)
+                {
+                    <div class="list-group-item list-group-item-action p-3">
+                        <div class="row align-items-center">
+                            <div class="col-md-3 col-sm-4 mb-2 mb-md-0">
+                                @if (!string.IsNullOrEmpty(video.ThumbnailUrl))
+                                {
+                                    <img src="@video.ThumbnailUrl" class="img-fluid rounded" alt="@video.Title" style="max-height: 120px; width: 100%; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 120px; width: 100%;">
+                                        <i class="bi bi-play-circle text-white" style="font-size: 2rem;"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-9 col-sm-8">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="mb-1">@video.Title</h5>
+                                    <span class="badge bg-@GetStatusBadgeColor(video.Status)">@video.Status</span>
+                                </div>
+                                <p class="mb-1 text-muted">@video.Channel</p>
+                                <p class="mb-2 text-muted small">@TruncateText(video.Description, 200)</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-muted small">
+                                        @if (video.Duration.HasValue)
+                                        {
+                                            <span class="me-3"><i class="bi bi-clock"></i> @FormatDuration(video.Duration.Value)</span>
+                                        }
+                                        @if (video.ViewCount.HasValue)
+                                        {
+                                            <span class="me-3"><i class="bi bi-eye"></i> @FormatViewCount(video.ViewCount.Value)</span>
+                                        }
+                                        @if (video.PublishedAt.HasValue)
+                                        {
+                                            <span><i class="bi bi-calendar"></i> @video.PublishedAt.Value.ToString("MMM dd, yyyy")</span>
+                                        }
+                                    </div>
+                                    <button class="btn btn-outline-primary btn-sm" @onclick="() => OpenVideo(video.OriginalUrl)">
+                                        <i class="bi bi-play-fill"></i> Watch
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     }
     else if (string.IsNullOrEmpty(youtubeUrl) && !isProcessing)
     {
@@ -139,6 +201,7 @@
     private bool isProcessing = false;
     private string errorMessage = "";
     private string successMessage = "";
+    private bool isGridView = true;
     
 
     protected override async Task OnInitializedAsync()
@@ -251,6 +314,12 @@
     private async Task OpenVideo(string url)
     {
         await JSRuntime.InvokeAsync<object>("open", url, "_blank");
+    }
+
+    private void SetViewMode(bool gridView)
+    {
+        isGridView = gridView;
+        StateHasChanged();
     }
 
 
