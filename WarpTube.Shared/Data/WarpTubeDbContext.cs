@@ -71,11 +71,9 @@ public class WarpTubeDbContext : DbContext
                   .HasConversion<string>()
                   .HasMaxLength(20);
 
-            entity.Property(e => e.CreatedAt)
-                  .ValueGeneratedOnAdd();
+            entity.Property(e => e.CreatedAt);
 
-            entity.Property(e => e.UpdatedAt)
-                  .ValueGeneratedOnAddOrUpdate();
+            entity.Property(e => e.UpdatedAt);
         });
     }
 }

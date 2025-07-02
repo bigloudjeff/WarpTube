@@ -36,7 +36,6 @@ public class YouTubeDownloadService : IYouTubeDownloadService
         if (existingVideo != null)
         {
             existingVideo.OriginalUrl = url;
-            existingVideo.UpdatedAt = DateTime.UtcNow;
             await dbContext.SaveChangesAsync();
             return existingVideo;
         }
@@ -81,8 +80,7 @@ public class YouTubeDownloadService : IYouTubeDownloadService
                 ChannelId = root.TryGetProperty("uploader_id", out var uploaderId) ? uploaderId.GetString() : null,
                 OriginalUrl = url,
                 Status = VideoStatus.Active,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow
             };
 
             // Parse published date
@@ -203,8 +201,7 @@ public class YouTubeDownloadService : IYouTubeDownloadService
                         ChannelId = root.TryGetProperty("uploader_id", out var uploaderId) ? uploaderId.GetString() : null,
                         OriginalUrl = $"https://www.youtube.com/watch?v={videoId}",
                         Status = VideoStatus.Active,
-                        CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow
+                        CreatedAt = DateTime.UtcNow
                     };
 
                     // Parse duration if available
