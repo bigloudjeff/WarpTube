@@ -2,6 +2,9 @@
 # WarpTube Web Browser Launch Script
 # Usage: ./run-web.sh [--open-browser]
 
+# Clear the screen
+clear
+
 URL="http://localhost:5198"
 OPEN_BROWSER=false
 
