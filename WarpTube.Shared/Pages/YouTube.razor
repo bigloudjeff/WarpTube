@@ -65,7 +65,10 @@
     {
         <div class="row">
             <div class="col-12 d-flex justify-content-between align-items-center mb-4">
-                <h3 class="mb-0">Video Library</h3>
+                <div>
+                    <h3 class="mb-0">Video Library</h3>
+                    <small class="text-muted">Total videos: @totalVideos (Showing @videos.Count)</small>
+                </div>
                 <div class="btn-group" role="group" aria-label="View toggle">
                     <button type="button" class="btn @(isGridView ? "btn-primary" : "btn-outline-primary") btn-sm" @onclick="() => SetViewMode(true)">
                         <i class="bi bi-grid-3x3-gap"></i> Grid
@@ -180,6 +183,17 @@
                 }
             </div>
         }
+        
+        @if (videos.Count < totalVideos)
+        {
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <button class="btn btn-primary" @onclick="LoadMore">
+                        <i class="bi bi-arrow-down-circle"></i> Load More Videos (@(totalVideos - videos.Count) remaining)
+                    </button>
+                </div>
+            </div>
+        }
     }
     else if (string.IsNullOrEmpty(youtubeUrl) && !isProcessing)
     {
@@ -202,6 +216,9 @@
     private string errorMessage = "";
     private string successMessage = "";
     private bool isGridView = true;
+    private int totalVideos = 0;
+    private int pageSize = 50;
+    private int currentPage = 0;
     
 
     protected override async Task OnInitializedAsync()
@@ -230,13 +247,33 @@
         }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
     }
 
-    private async Task LoadVideos()
+    private async Task LoadVideos(bool append = false)
     {
         await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-        videos = await dbContext.Videos
+        
+        // Get total count
+        totalVideos = await dbContext.Videos.CountAsync();
+        
+        // Get videos with pagination
+        var query = dbContext.Videos
             .OrderByDescending(v => v.CreatedAt)
-            .Take(20)
-            .ToListAsync();
+            .Skip(currentPage * pageSize)
+            .Take(pageSize);
+            
+        if (append)
+        {
+            videos.AddRange(await query.ToListAsync());
+        }
+        else
+        {
+            videos = await query.ToListAsync();
+        }
+    }
+    
+    private async Task LoadMore()
+    {
+        currentPage++;
+        await LoadVideos(true);
     }
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
@@ -287,6 +324,7 @@
             if (video != null)
             {
                 successMessage = $"Video '{video.Title}' has been added to your library.";
+                currentPage = 0; // Reset pagination
                 await LoadVideos();
                 youtubeUrl = "";
             }
