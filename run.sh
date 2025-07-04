@@ -1,6 +1,9 @@
 #!/bin/bash
 # WarpTube Default Launch Script (Web Browser)
 
+# Clear the terminal screen
+clear
+
 echo "🚀 Starting WarpTube (Web Browser)..."
 echo "💡 Use ./run-mac.sh for Mac Catalyst or ./run-web.sh to be explicit"
 echo ""
